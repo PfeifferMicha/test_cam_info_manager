@@ -18,6 +18,13 @@ public:
               "Starting node" );
       auto nh_left = this->create_sub_node( "left" );
       auto nh_right = this->create_sub_node( "right" );
+      auto nh_left_left = nh_left->create_sub_node( "left" );
+      auto nh_right_right = nh_right->create_sub_node( "right" );
+
+      std::string resolved_service_name = nh_left->get_node_base_interface()->resolve_topic_or_service_name( 
+                                                               "~/set_camera_info", true, false );
+      RCLCPP_INFO( rclcpp::get_logger("TestCameraInfoManager"),
+              "TEST NAMESPACE: %s", resolved_service_name.c_str() );
 
       RCLCPP_INFO( rclcpp::get_logger("TestCameraInfoManager"),
               "Created sub-node with namespace: %s", nh_left->get_effective_namespace().c_str() );
@@ -28,9 +35,9 @@ public:
               "Starting two CameraInfoManager's" );
         
       cam_info_manager_left = std::make_shared<camera_info_manager::CameraInfoManager>(
-              nh_left.get(), "left" );
+              nh_left_left.get(), "left" );
       cam_info_manager_right = std::make_shared<camera_info_manager::CameraInfoManager>(
-              nh_right.get(), "right" );
+              nh_right_right.get(), "right" );
 
   }
 
